@@ -15,6 +15,7 @@ console.log(age1);
 
 const user_name = "이응경";
 const $ = "이런 것도 변수 이름이 되네...";
+
 console.log(user_name);
 console.log($);
 
@@ -24,3 +25,13 @@ let my-name = "이응경";
 console.log(my-name);
 */
 
+function parenFunc(callBack) {
+    console.log("parent")
+    callBack();
+}
+
+function childFunc() {
+    console.log('chlid');    
+}
+
+parenFunc(childFunc);
