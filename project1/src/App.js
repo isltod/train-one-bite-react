@@ -3,6 +3,7 @@ import Viewer from "./components/Viewer";
 import Controller from "./components/Controller";
 import {useEffect, useRef, useState} from "react";
 import {logDOM} from "@testing-library/dom";
+import Even from "./components/Even";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -28,7 +29,7 @@ function App() {
     //     console.log("호출됨: ", count, text);
     // }, []);
 
-    // 따라서 제데로 마운트 업데이트 구분해서 뭘 하려면... 아래처럼? 또는 위에 1, 3번으로 나눠서...
+    // 따라서 제대로 마운트 업데이트 구분해서 뭘 하려면... 아래처럼? 또는 위에 1, 3번으로 나눠서...
     // const didMountRef = useRef(false);
     // useEffect(() => {
     //     if (!didMountRef.current) {
@@ -61,6 +62,7 @@ function App() {
             </section>
             <section>
                 <Viewer count={count} />
+                {count % 2 == 0 && <Even/>}
             </section>
             <section>
                 {/*요게 핵심이네...내가 몰랐던...Props로 상태와 함수를 전달한다...*/}
