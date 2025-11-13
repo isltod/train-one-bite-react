@@ -2,7 +2,7 @@ import './App.css';
 import Header from "./components/Header";
 import TodoEditor from "./components/TodoEditor";
 import TodoList from "./components/TodoList";
-import {useRef, useState} from "react";
+import {useReducer, useRef, useState} from "react";
 
 const mockTodos = [
     {
@@ -25,41 +25,47 @@ const mockTodos = [
     },
 ];
 
+function reducer(state, action) {
+    switch (action.type) {
+        case "CREATE":
+            const newItem = {
+                id: action.id,
+                content: action.content,
+                isDone: false,
+                createDate: new Date().getTime(),
+            }
+            return [newItem, ...state];
+        case "UPDATE":
+            return state.map(item =>
+                item.id === action.targetId ? {...item, isDone: !item.isDone} : item
+            );
+        case "DELETE":
+            return state.filter(item => item.id !== action.targetId);
+        default:
+            return state;
+    }
+}
+
 function App() {
-    const [todos, setTodos] = useState(mockTodos);
+    const [todos, dispatch] = useReducer(reducer, mockTodos);
     const idRef = useRef(3);
 
     const onCreateTodo = (content) => {
-        const newTodo = {
-            id: idRef.current,
-            content,
-            isDone: false,
-            createDate: new Date().getTime(),
-        };
-        setTodos([newTodo, ...todos])
+        dispatch({type: "CREATE", id: idRef.current, content});
         idRef.current += 1;
     }
     const onUpdateTodo = (targetId) => {
-        setTodos(todos.map((todo) => todo.id === targetId ? {...todo, isDone: !todo.isDone} : todo));
-        // setTodos(todos.map((todo) => {
-        //     // if (todo.id === targetId) {
-        //     //     let updatedTodo = {...todo};
-        //     //     updatedTodo.isDone = !updatedTodo.isDone;
-        //     //     return updatedTodo
-        //     // } else {
-        //     //     return todo;
-        //     // }
-        // }));
+        dispatch({type:"UPDATE", targetId});
     }
     const onDeleteTodo = (targetId) => {
-        setTodos(todos.filter((todo) => todo.id !== targetId));
+        dispatch({type:"DELETE", targetId});
     }
 
     return (
         <div className="App">
-            <Header />
-            <TodoEditor onCreateTodo={onCreateTodo} />
-            <TodoList todos={todos} onUpdateTodo={onUpdateTodo} onDeleteTodo={onDeleteTodo} />
+            <Header/>
+            <TodoEditor onCreateTodo={onCreateTodo}/>
+            <TodoList todos={todos} onUpdateTodo={onUpdateTodo} onDeleteTodo={onDeleteTodo}/>
         </div>
     );
 }
