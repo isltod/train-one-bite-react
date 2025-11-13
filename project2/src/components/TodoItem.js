@@ -1,6 +1,8 @@
 import "./TodoItem.css";
+import React from "react";
 
 function TodoItem({id, isDone, content, createDate, onUpdate, onDelete}) {
+    console.log(`${id} Todo 업데이트`);
     const onChangeCheckBox = () => {
         onUpdate(id);
     }
@@ -24,4 +26,4 @@ function TodoItem({id, isDone, content, createDate, onUpdate, onDelete}) {
     )
 }
 
-export default TodoItem;
+export default React.memo(TodoItem);
