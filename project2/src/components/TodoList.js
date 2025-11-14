@@ -1,8 +1,9 @@
 import "./TodoList.css";
 import TodoItem from "./TodoItem.js";
-import {useMemo, useState} from "react";
+import {useContext, useMemo, useState} from "react";
+import {TodoStateContext} from "../App";
 
-function TodoList({todos, onUpdateTodo, onDeleteTodo}) {
+function TodoList() {
     const [search, setSearch] = useState("");
     function onChangeSearch(e) {
         setSearch(e.target.value);
@@ -13,6 +14,7 @@ function TodoList({todos, onUpdateTodo, onDeleteTodo}) {
             : todos.filter((todo) => todo.content.toLowerCase().includes(search.toLowerCase()));
     }
 
+    const {todos} = useContext(TodoStateContext);
     function analyzeTodos () {
         console.log("Analyzed todos 함수 호촐");
         const totalCount = todos.length;
@@ -36,7 +38,7 @@ function TodoList({todos, onUpdateTodo, onDeleteTodo}) {
                    placeholder="검색어를 입력하세요"/>
             <div className="list-wrapper">
                 {getSearchResult().map((todo) => (
-                    <TodoItem key={todo.id} {...todo} onUpdate={onUpdateTodo} onDelete={onDeleteTodo} />
+                    <TodoItem key={todo.id} {...todo} />
                 ))}
             </div>
         </div>
