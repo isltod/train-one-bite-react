@@ -1,8 +1,8 @@
 import "./Editor.css";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {emotionList, getFormatedDate} from "../util";
 import Button from "./Button";
-import {useNavigate} from "react-router";
+import {useNavigate} from "react-router-dom";
 import EmotionItem from "./EmotionItem";
 
 function Editor({initData, onSubmit}) {
@@ -27,6 +27,16 @@ function Editor({initData, onSubmit}) {
     function handleOnChangeEmotion(emotionId) {
         setState({...state, emotionId: emotionId});
     }
+
+    // initData값이 변할 때, 그러니까 처음 랜더링 될 때 상태값에 initData 값을 저장한다...
+    useEffect(() => {
+        if (initData) {
+            setState({
+                ...initData,
+                date: getFormatedDate(new Date(parseInt(initData.date)))
+            });
+        }
+    }, [initData]);
 
     return (
         <div className="Editor">
