@@ -2,8 +2,9 @@ import {useNavigate} from "react-router-dom";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Editor from "../components/Editor";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {DiaryDispatchContext} from "../App";
+import {setPageTitle} from "../util";
 
 function New() {
     const navigate = useNavigate();
@@ -17,6 +18,10 @@ function New() {
         onCreate(date, content, emotionId);
         navigate("/", {replace: true});
     }
+
+    useEffect(() => {
+        setPageTitle("새 일기 쓰기")
+    }, []);
 
     return (
         <div>

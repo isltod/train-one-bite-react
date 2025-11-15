@@ -2,15 +2,20 @@ import {useNavigate, useParams} from "react-router-dom";
 import useDiary from "../hooks/useDiary";
 import Header from "../components/Header";
 import Button from "../components/Button";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {DiaryDispatchContext} from "../App";
 import Editor from "../components/Editor";
+import {setPageTitle} from "../util";
 
 function Edit() {
     const navigate = useNavigate();
     function onGoBack() {
         navigate(-1);
     }
+
+    useEffect(() => {
+        setPageTitle(`${id}번 일기 수정하기`)
+    }, [])
 
     const {onDelete, onUpdate} = useContext(DiaryDispatchContext)
     function onClickDelete() {
