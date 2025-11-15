@@ -44,3 +44,8 @@ export function getMonthRangeByDate(date) {
     ).getTime();
     return {beginTimeStamp, endTimeStamp};
 }
+
+export function setPageTitle(title) {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerText = title;
+}

@@ -3,7 +3,7 @@ import Button from "../components/Button";
 import Header from "../components/Header";
 import {useContext, useEffect, useState} from "react";
 import {DiaryStateContext} from "../App";
-import {getMonthRangeByDate} from "../util";
+import {getMonthRangeByDate, setPageTitle} from "../util";
 import DiaryList from "../components/DiaryList";
 
 function Home() {
@@ -21,6 +21,9 @@ function Home() {
         setPivotDate(new Date(pivotDate.getFullYear(), pivotDate.getMonth() - 1));
     }
 
+    useEffect(() => {
+        setPageTitle("Wolf's 감정 일기장")
+    }, []);
     useEffect(() => {
         if (data.length >= 1) {
             const { beginTimeStamp, endTimeStamp } = getMonthRangeByDate(pivotDate);
