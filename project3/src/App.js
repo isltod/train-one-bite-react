@@ -6,34 +6,15 @@ import Diary from "./pages/Diary";
 import Edit from "./pages/Edit";
 import {createContext, useEffect, useReducer, useRef, useState} from "react";
 
-const mockData = [
-    {
-        id: "mock1",
-        date: new Date().getTime() - 1,
-        content: "mock1",
-        emotionId: 1,
-    },
-    {
-        id: "mock2",
-        date: new Date().getTime() - 2,
-        content: "mock2",
-        emotionId: 2,
-    },
-    {
-        id: "mock3",
-        date: new Date().getTime() - 3,
-        content: "mock3",
-        emotionId: 3,
-    },
-]
-
 export const DiaryStateContext = createContext();
 export const DiaryDispatchContext = createContext();
 
 function reducer(state, action) {
+    let newState = [];
     switch (action.type) {
-        case "INIT":
+        case "INIT": {
             return action.data;
+        }
         case "CREATE":
             const newItem = {
                 id: action.id,
@@ -41,7 +22,9 @@ function reducer(state, action) {
                 content: action.content,
                 emotionId: action.emotionId,
             };
-            return [newItem, ...state];
+            newState = [newItem, ...state];
+            localStorage.setItem("diary", JSON.stringify(newState));
+            return newState;
         case "UPDATE":
             const updateItem = {
                 id: action.id,
@@ -49,13 +32,17 @@ function reducer(state, action) {
                 content: action.content,
                 emotionId: action.emotionId,
             };
-            return state.map((item) =>
+            newState = state.map((item) =>
                 String(item.id) === String(updateItem.id) ? updateItem : item
             );
+            localStorage.setItem("diary", JSON.stringify(newState));
+            return newState;
         case "DELETE":
-            return state.filter((item) =>
+            newState = state.filter((item) =>
                 String(item.id) !== String(action.id)
             );
+            localStorage.setItem("diary", JSON.stringify(newState));
+            return newState;
     }
 }
 
@@ -65,7 +52,15 @@ function App() {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     useEffect(() => {
-        dispatch({type: "INIT", data: mockData});
+        const rawData = localStorage.getItem("diary");
+        if (rawData) {
+            const localData = JSON.parse(rawData);
+            if (localData.length > 0) {
+                localData.sort((a, b) => Number(b.id) - Number(a.id));
+                idRef.current = localData[0].id + 1;
+                dispatch({type: "INIT", data: localData});
+            }
+        }
         setIsDataLoaded(true);
     }, []);
     function onCreate(date, content, emotionId) {
