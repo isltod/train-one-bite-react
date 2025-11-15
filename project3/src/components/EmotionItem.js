@@ -1,4 +1,5 @@
 import "./EmotionItem.css";
+import React from "react";
 
 function EmotionItem({id, img, name, onClick, isSelected}) {
     function handleClick(e) {
@@ -15,4 +16,4 @@ function EmotionItem({id, img, name, onClick, isSelected}) {
     )
 }
 
-export default EmotionItem;
+export default React.memo(EmotionItem);

@@ -1,5 +1,5 @@
 import "./Editor.css";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {emotionList, getFormatedDate} from "../util";
 import Button from "./Button";
 import {useNavigate} from "react-router-dom";
@@ -25,8 +25,17 @@ function Editor({initData, onSubmit}) {
         onSubmit(state);
     }
     function handleOnChangeEmotion(emotionId) {
-        setState({...state, emotionId: emotionId});
+        // 마운트 이후에 변하지 않도록 callback,
+        // but state 값을 마운트 시점에 받아서 업데이트 안하므로 새로 입력한 값이 저장이 안되나?
+        // 그래서 함수형으로 한다고...
+        function changeEmotionId(state) {
+            return {...state, emotionId};
+        }
+        setState(changeEmotionId);
+        // 이걸 줄여서 쓰면...짧긴 하다..함수 이름 고민할 필요도 없고...
+        // setState((state) => ({...state, emotionId}));
     }
+    const callBackChangeEmotion = useCallback(handleOnChangeEmotion, [])
 
     // initData값이 변할 때, 그러니까 처음 랜더링 될 때 상태값에 initData 값을 저장한다...
     useEffect(() => {
@@ -53,7 +62,7 @@ function Editor({initData, onSubmit}) {
                 <div className="input_wrapper emotion_list_wrapper">
                     {emotionList.map((item) => (<EmotionItem
                         key={item.id} {...item}
-                        onClick={handleOnChangeEmotion}
+                        onClick={callBackChangeEmotion}
                         isSelected={state.emotionId === item.id} />))}
                 </div>
             </div>
